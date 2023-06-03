@@ -2,7 +2,7 @@
 
 // use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PageController;
+// use App\Http\Controllers\PageController;
 //use Illuminate\Support\Facades\Schema;
 
 /*
@@ -51,30 +51,21 @@ use App\Http\Controllers\PageController;
 
 
 
-    //Admin
-    Route::get('/admin', [App\Http\Controllers\PageController::class, 'getIndexAdmin']);											
+    Route::get('/admin-add-form',[App\Http\Controllers\PageController::class,'getAdminAdd'])->name('add-product');
     
-    //Cấu hình Route  để chạy giao diện thêm sản phẩm					
-    Route::get('/admin-add-form', [App\Http\Controllers\PageController::class, 'getAdminAdd'])->name('add-product');	
+    Route::post('/admin-add-form',[App\Http\Controllers\PageController::class,'postAdminAdd']);
     
-    //Xây dựng Route để thưc hiện Post dữ liệu					
-    Route::post('/admin-add-form', [App\Http\Controllers\PageController::class, 'postAdminAdd']);	
+    Route::get('/admin-edit-form/{id}',[App\Http\Controllers\PageController::class,'getAdminEdit']);
+
+    Route::post('/admin-edit',[App\Http\Controllers\PageController::class,'postAdminEdit']);
     
-    //Xây dựng Route để thực hiện Sữa giao diện cho trang sửa
-    Route::get('/admin-edit-form/{id}', [App\Http\Controllers\PageController::class, 'getAdminEdit'])->name('getAdminEdit');	
+    Route::post('/admin-delete/{id}',[App\Http\Controllers\PageController::class,'postAdminDelete']);
     
-    // Xây dựng Route để thực hiện Sữa giao diện cho trang sửa
-    Route::post('/admin-edit', [App\Http\Controllers\PageController::class, 'postAdminEdit']);	
+    Route::get('admin-export',[App\Http\Controllers\PageController::class,'exportAdminProduct'])->name('export');
+
+    Route::get('/admin',[App\Http\Controllers\PageController::class,'getIndexAdmin']);
+
     
-    // Xây dựng Route để thực hiện xóa sản phẩm
-    Route::get('/admin-delete{id}', [App\Http\Controllers\PageController::class, 'postAdminDelete'])->name('postAdminDelete');
-
-
-    Route::get('/admin-export', [App\Http\Controllers\PageController::class, 'exportController@export'])->name('export');
-
-
-
-
     Route::get('loai-san-pham/{type}',[				
         'as'=>'loaisanpham',			
         'uses'=>'PageController@getLoaiSp'		

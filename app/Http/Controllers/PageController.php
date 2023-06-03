@@ -49,64 +49,58 @@ class PageController extends Controller
     }
 
     //Tạo Controller 	
-    public function getIndexAdmin()
-    {
-        $products = products::all();
-        return view('pageadmin.admin')->with(['products' => $products, 'sumSold' => count(bill_detail::all())]);
-    }
-
-    //Tạo Controller để chạy View  giao diện thêm sản phẩm lên
-    public function getAdminAdd()   
-    {
+    public function getIndexAdmin(){
+        $product = products::all();
+        return view('pageadmin.admin')->with(['product'=>$product,'sumSold'=>count(bill_detail::all())]);
+     }
+     public function getAdminAdd(){
         return view('pageadmin.formAdd');
-    }
-
-    //Tạo Controller postAdminAdd để thêm sản phẩm						
+     }
+    
     public function postAdminAdd(Request $request)
     {
         $product = new products();
+    
         if ($request->hasFile('inputImage')) {
             $file = $request->file('inputImage');
-            $fileName = $file->getClientOriginalName('inputImage');
+            $fileName = $file->getClientOriginalName();
             $file->move('source/image/product', $fileName);
+            $product->image = $fileName;
         }
-        $file_name = null;
-        if ($request->file('inputImage') != null) {
-            $file_name = $request->file('inputImage')->getClientOriginalName();
-        }
-
+    
         $product->name = $request->inputName;
-        $product->image = $file_name;
         $product->description = $request->inputDescription;
         $product->unit_price = $request->inputPrice;
         $product->promotion_price = $request->inputPromotionPrice;
         $product->unit = $request->inputUnit;
         $product->new = $request->inputNew;
+        $product->id_type = $request->inputType;
         $product->save();
         return $this->getIndexAdmin();
     }
 
-    //Xây dựng Controller  để thực hiện Sữa giao diện cho trang sửa
+    public function getAdminEdit($id)
+{
+ $product = products::find($id);
+ return view('pageadmin.formEdit')->with('product', $product);
+}
+    
     public function postAdminEdit(Request $request)
     {
-       
         $id = $request->editId;
         $product = products::find($id);
+    
         if ($request->hasFile('editImage')) {
             $file = $request->file('editImage');
-            $fileName = $file->getClientOriginalName('editImage');
+            $fileName = $file->getClientOriginalName();
             $file->move('source/image/product', $fileName);
+            $product->image = $fileName;
         }
 
-        if (!$product) {
-            // Handle the case where the product is not found
-            return redirect()->back()->with('error', 'Product not found.');
+        if ($request -> file('editImage')!=null){
+            $product -> image = $fileName;
         }
-        // $fileName = null;
-        if ($request->file('editImage') != null) {
-            $product ->image = $fileName;
-        }
-
+    
         $product->name = $request->editName;
         $product->description = $request->editDescription;
         $product->unit_price = $request->editPrice;
@@ -118,24 +112,14 @@ class PageController extends Controller
         return $this->getIndexAdmin();
     }
 
-
-    //Xây dựng Controller đẻ thực hiện Sữa giao diện cho trang sửa
-    public function getAdminEdit($id)
-    {
-        $product = products::find($id);
-        return view('pageadmin.formEdit')->with('product', $product);
-    }
-
-        //Xây dựng Controller đẻ thực hiện Sữa giao diện cho trang sửa
-        public function getAdminDelete($id)
-        {
-            $product = products::find($id);
-            $product->delete();
-            return $this->getIndexAdmin();
-        }
+    
 
 
-
+public function postAdminDelete($id){
+    $product = products::find($id);
+    $product-> delete();
+    return $this -> getIndexAdmin();
+}
     // public function detChitiet(){
     //     return view('page.chitiet_sanpham');
     // }
