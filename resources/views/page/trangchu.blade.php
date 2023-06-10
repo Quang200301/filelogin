@@ -99,7 +99,6 @@
                                 <p class="pull-left">Tìm thấy {{ count($newProduct) }} sản phẩm</p>
                                 <div class="clearfix"></div>
                             </div>
-
                             <div class="row">
                                 @foreach ($newProduct as $pr)
                                     <div class="col-sm-3">
@@ -127,13 +126,15 @@
                                                     @endif
                                                 </p>
                                             </div>
+
+
                                             <div class="single-item-caption">
-                                                <a class="add-to-cart pull-left" href="shopping_cart.html"><i
+                                                <a class="add-to-cart pull-left" href="{{route('themgiohang',$pr->id)}}"><i
                                                         class="fa fa-shopping-cart"></i></a>
-                                                <a class="beta-btn primary" href="detail/{{$pr->id}}">Details <i
+                                                <a class="beta-btn primary" href="{{route('chitietsanpham',$pr->id)}}">Details <i
                                                         class="fa fa-chevron-right"></i></a>
                                                 <div class="clearfix"></div>
-                                            </div>
+                                            </div>                           
                                         </div>
                                     </div>
                                 @endforeach

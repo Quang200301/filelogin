@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\bill_detail;
 use App\Models\products;
 use App\Models\slide;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Session;
 use App\Models\comments;
 use App\Models\type_products;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,25 +51,27 @@ class PageController extends Controller
     }
 
     //Tạo Controller 	
-    public function getIndexAdmin(){
+    public function getIndexAdmin()
+    {
         $product = products::all();
-        return view('pageadmin.admin')->with(['product'=>$product,'sumSold'=>count(bill_detail::all())]);
-     }
-     public function getAdminAdd(){
+        return view('pageadmin.admin')->with(['product' => $product, 'sumSold' => count(bill_detail::all())]);
+    }
+    public function getAdminAdd()
+    {
         return view('pageadmin.formAdd');
-     }
-    
+    }
+
     public function postAdminAdd(Request $request)
     {
         $product = new products();
-    
+
         if ($request->hasFile('inputImage')) {
             $file = $request->file('inputImage');
             $fileName = $file->getClientOriginalName();
             $file->move('source/image/product', $fileName);
             $product->image = $fileName;
         }
-    
+
         $product->name = $request->inputName;
         $product->description = $request->inputDescription;
         $product->unit_price = $request->inputPrice;
@@ -80,16 +84,16 @@ class PageController extends Controller
     }
 
     public function getAdminEdit($id)
-{
- $product = products::find($id);
- return view('pageadmin.formEdit')->with('product', $product);
-}
-    
+    {
+        $product = products::find($id);
+        return view('pageadmin.formEdit')->with('product', $product);
+    }
+
     public function postAdminEdit(Request $request)
     {
         $id = $request->editId;
         $product = products::find($id);
-    
+
         if ($request->hasFile('editImage')) {
             $file = $request->file('editImage');
             $fileName = $file->getClientOriginalName();
@@ -97,10 +101,10 @@ class PageController extends Controller
             $product->image = $fileName;
         }
 
-        if ($request -> file('editImage')!=null){
-            $product -> image = $fileName;
+        if ($request->file('editImage') != null) {
+            $product->image = $fileName;
         }
-    
+
         $product->name = $request->editName;
         $product->description = $request->editDescription;
         $product->unit_price = $request->editPrice;
@@ -112,17 +116,52 @@ class PageController extends Controller
         return $this->getIndexAdmin();
     }
 
-    
 
 
-public function postAdminDelete($id){
-    $product = products::find($id);
-    $product-> delete();
-    return $this -> getIndexAdmin();
-}
-    // public function detChitiet(){
-    //     return view('page.chitiet_sanpham');
-    // }
+
+    public function postAdminDelete($id)
+    {
+        $product = products::find($id);
+        $product->delete();
+        return $this->getIndexAdmin();
+    }
+
+
+    // public function getAddToCart(Request $req, $id){					
+//     $product = products::find($id);					
+//     $oldCart = Session('cart')?Session::get('cart'):null;					
+//     $cart = new Cart($oldCart);					
+//     $cart->add($product,$id);					
+//     $req->session()->put('cart', $cart);					
+//     return redirect()->back();					
+// }			
+
+
+    // --------------- CART -----------		
+//------------- bắt buộc phải đăng nhập mới được thêm sản phẩm-----------																		
+    public function getAddToCart(Request $req, $id)
+    {
+        if (Session::has('users')) {   //Dùng Session để làm giỏ hàng $oldcart : là giỏ hàng hiện tạiNếu tồn tại giỏ hàng thi chúng ta gắm cho nó  , khong thì cho nó rỗng 
+            if (products::find($id)) {  //lấy sản phẩm ra theo id
+                $product = products::find($id);
+                $oldCart = Session('cart') ? Session::get('cart') : null;  //$oldcart:là tình trạng giỏ hàng hiện tại
+                $cart = new Cart($oldCart);  //$cart: là tình trạng giỏ hàng sau khi thêm mới sản phẩm 
+                $cart->add($product, $id); //Đây là tên class mà chúng ta thực  hiện tạo ở model Cart với phuong thúc add()
+                $req->session()->put('cart', $cart);
+                return redirect()->back();
+            } else {
+                return '<script>alert("Không tìm thấy sản phẩm này.");window.location.assign("/");</script>';
+            }
+        } else {
+            return '<script>alert("Vui lòng đăng nhập để sử dụng chức năng này.");window.location.assign("/login");</script>';
+        }
+    }
+
+
+
+    public function detChitiet(){
+        return view('page.chitiet_sanpham');
+    }
 
     // public function getLienhe(){
     //     return view('page.lienhe');
