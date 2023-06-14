@@ -13,8 +13,8 @@
                     @if (Session::has('users'))
                         <li><a href="logout"><i class="fa fa-user"></i>{{ Session('users')->name }}</a></li>
                     @else
-                        <li><a href="register">Đăng kí</a></li>
-                        <li><a href="login">Đăng nhập</a></li>
+                        <li><a href="register">Register</a></li>
+                        <li><a href="login">Login</a></li>
                     @endif
                 </ul>
             </div>
