@@ -30,7 +30,12 @@
             <div class="pull-right beta-components space-left ov">
                 <div class="space10">&nbsp;</div>
                 <div class="beta-comp">
-
+                    <form role="search" method="get" id="searchform" action="/">
+                        <input type="text" value="" name="s" id="s" placeholder="Nhập từ khóa..." />
+                        <button class="fa fa-search" type="submit" id="searchsubmit"></button>
+                    </form>
+                </div>
+                <div class="beta-comp">
                     @if (Session::has('cart'))
                         <div class="cart">
                             <div class="beta-select"><i class="fa fa-shopping-cart"></i> Giỏ hàng (@if (Session::has('cart'))
@@ -65,8 +70,7 @@
 
                                     <div class="center">
                                         <div class="space10">&nbsp;</div>
-                                        <a href="" class="beta-btn primary text-center">Đặt hàng <i
-                                                class="fa fa-chevron-right"></i></a>
+                                        <a href="check-out" class="beta-btn primary text-center">Đặt hàng <i class="fa fa-chevron-right"></i></a>
                                     </div>
                                 </div>
                             </div>

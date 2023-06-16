@@ -36,7 +36,7 @@ class UserController extends Controller
             'password' =>  $request ->input('pw'),
         ];
 
-        if(Auth::attempt($login)){
+        if(Auth::attempt($login)){    //Đây là một phương thức của Laravel framework được sử dụng để xác minh thông tin đăng nhập
             $user = Auth::user();
             Session::put('users', $user);
             echo '<script>alert("Đăng nhập thành công.");window.location.assign("trangchu");</script>';

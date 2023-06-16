@@ -93,7 +93,14 @@ Route::post('/register', [App\Http\Controllers\UserController::class, 'Register'
 
 
 Route::get('add-to-cart/{id}', [App\Http\Controllers\PageController::class, 'getAddToCart'])->name('themgiohang');											
-// Route::get('del-cart/{id}', [PageController::class, 'getDelItemCart'])->name('xoagiohang');											
+Route::get('del-cart/{id}', [PageController::class, 'getDelItemCart'])->name('xoagiohang');		
+
+
+//-----------Ta tien hanh tao  1 phuong thuc moi co ten la Post hang de lLuu thong tin dat hang									
+// ----------------- CHECKOUT ---------------				
+Route::get('check-out', [App\Http\Controllers\PageController::class, 'getCheckout'])->name('dathang');				
+Route::post('check-out', [App\Http\Controllers\PageController::class, 'postCheckout'])->name('dathang');				
+
 
 
 //     Route::get('/database', function () {

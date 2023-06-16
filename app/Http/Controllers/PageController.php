@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\bills;
 use App\Models\bill_detail;
+use App\Models\customer;
 use App\Models\products;
+use App\Models\wishlists;
 use App\Models\slide;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Session;
@@ -141,11 +144,11 @@ class PageController extends Controller
 //------------- bắt buộc phải đăng nhập mới được thêm sản phẩm-----------																		
     public function getAddToCart(Request $req, $id)
     {
-        if (Session::has('users')) {   //Dùng Session để làm giỏ hàng $oldcart : là giỏ hàng hiện tạiNếu tồn tại giỏ hàng thi chúng ta gắm cho nó  , khong thì cho nó rỗng 
-            if (products::find($id)) {  //lấy sản phẩm ra theo id
+        if (Session::has('users')) { //Dùng Session để làm giỏ hàng $oldcart : là giỏ hàng hiện tạiNếu tồn tại giỏ hàng thi chúng ta gắm cho nó  , khong thì cho nó rỗng 
+            if (products::find($id)) { //lấy sản phẩm ra theo id
                 $product = products::find($id);
-                $oldCart = Session('cart') ? Session::get('cart') : null;  //$oldcart:là tình trạng giỏ hàng hiện tại
-                $cart = new Cart($oldCart);  //$cart: là tình trạng giỏ hàng sau khi thêm mới sản phẩm 
+                $oldCart = Session('cart') ? Session::get('cart') : null; //$oldcart:là tình trạng giỏ hàng hiện tại
+                $cart = new Cart($oldCart); //$cart: là tình trạng giỏ hàng sau khi thêm mới sản phẩm 
                 $cart->add($product, $id); //Đây là tên class mà chúng ta thực  hiện tạo ở model Cart với phuong thúc add()
                 $req->session()->put('cart', $cart);
                 return redirect()->back();
@@ -159,9 +162,80 @@ class PageController extends Controller
 
 
 
-    public function detChitiet(){
+    public function detChitiet()
+    {
         return view('page.chitiet_sanpham');
     }
+
+
+    //--------------Tao 1 function get và postCheckout trong Pagecontroller							
+    // ------------------------ CHECKOUT -------------------														
+    public function getCheckout()
+    {
+        if (Session::has('cart')) {
+            $oldCart = Session::get('cart');
+            $cart = new Cart($oldCart);
+            return view('page.checkout')->with([
+                'cart' => Session::get('cart'),
+                'product_cart' => $cart->items,
+                'totalPrice' => $cart->totalPrice,
+                'totalQty' => $cart->totalQty
+            ]);
+            ;
+        } else {
+            return redirect('trangchu');
+        }
+    }
+
+
+
+public function postCheckout(Request $req)													
+{													
+$cart = Session::get('cart');													
+$customer = new customer;													
+$customer->name = $req->full_name;													
+$customer->gender = $req->gender;													
+$customer->email = $req->email;													
+ $customer->address = $req->address;													
+ $customer->phone_number = $req->phone;													
+													
+ if (isset($req->notes)) {													
+ $customer->note = $req->notes;													
+} else {													
+ $customer->note = "Không có ghi chú gì";													
+ }													
+													
+ $customer->save();													
+													
+ $bill = new bills;													
+ $bill->id_customer = $customer->id;													
+ $bill->date_order = date('Y-m-d');													
+ $bill->total = $cart->totalPrice;													
+ $bill->payment = $req->payment_method;													
+ if (isset($req->notes)) {													
+ $bill->note = $req->notes;													
+} else {													
+ $bill->note = "Không có ghi chú gì";													
+ }													
+    $bill->save();													
+													
+    foreach ($cart->items as $key => $value) {													
+      $bill_detail = new bill_detail;													
+      $bill_detail->id_bill = $bill->id;													
+      $bill_detail->id_product = $key; //$value['item']['id'];													
+      $bill_detail->quantity = $value['qty'];													
+      $bill_detail->unit_price = $value['price'] / $value['qty'];													
+      $bill_detail->save();													
+    }													
+													
+    Session::forget('cart');													
+    $wishlists = wishlists::where('id_user', Session::get('user')->id)->get();													
+    if (isset($wishlists)) {													
+      foreach ($wishlists as $element) {													
+        $element->delete();													
+      }													
+    }
+}
 
     // public function getLienhe(){
     //     return view('page.lienhe');

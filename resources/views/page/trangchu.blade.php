@@ -127,7 +127,7 @@
                                                 </p>
                                             </div>
 
-
+                                            {{-- gán nút giỏ hàng --}}
                                             <div class="single-item-caption">
                                                 <a class="add-to-cart pull-left" href="{{route('themgiohang',$pr->id)}}"><i
                                                         class="fa fa-shopping-cart"></i></a>

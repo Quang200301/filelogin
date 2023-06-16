@@ -16,14 +16,14 @@
 	{{-- <link rel="stylesheet" title="style" href="source/assets/dest/css/style.css"> --}}
 	{{-- <link rel="stylesheet" href="source/assets/dest/css/animate.css"> --}}
 	{{-- <link rel="stylesheet" title="style" href="source/assets/dest/css/huong-style.css"> --}}
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/huong-style.css')}}">
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/animate.css')}}">
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/style.css')}}">
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/responsive.css')}}">
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/settings.css')}}">
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/colorbox.css')}}">
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/font-awesome.min.css')}}">
-	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/huong-style.css')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/animate.css')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/style.css')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/responsive.css')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/settings.css')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/colorbox.css')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/font-awesome.min.css')}}">
+	<link rel="stylesheet" title="style" href="{{ URL::to('../../../source/assets/dest/css/')}}">
 	<link rel="stylesheet" title="style" href="{{ URL::to('source/assets/dest/css/')}}">
 
 
@@ -37,7 +37,6 @@
 <body>
 @include('header')
 @yield('content')
-@include ('script')
 
 @include('footer')
 <!-- include Js files -->
